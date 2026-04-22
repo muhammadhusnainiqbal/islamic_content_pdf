@@ -92,4 +92,4 @@ Contact Us
 
 If you have any questions or suggestions about this Privacy Policy, feel free to contact us.
 
-Email: mrmuhammadhusnainiqbal@gmail.com
+Email: ummeshuja786@gmail.com
