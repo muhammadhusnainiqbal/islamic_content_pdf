@@ -1,9 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:islamic_content_pdf/config/app_config.dart';
-import 'package:islamic_content_pdf/config/surah_rehman_config.dart'
-    as surah_rehman;
 
-import 'package:islamic_content_pdf/config/surah_mulk_config.dart' as surah_mulk;
 import 'package:islamic_content_pdf/config/surah_yaseen_config.dart'
     as surah_yaseen;
 
@@ -13,8 +10,6 @@ class FlavorManager {
 
   static final Map<String, AppConfig> _flavors = {
     'surah_yaseen': surah_yaseen.kAppConfig,
-    'surah_rehman': surah_rehman.kAppConfig,
-    'surah_mulk': surah_mulk.kAppConfig,
   };
 
   static String normalize(String flavor) => flavor.trim().toLowerCase();
