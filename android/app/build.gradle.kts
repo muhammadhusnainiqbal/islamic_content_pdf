@@ -60,7 +60,7 @@ android {
         }
         create("surah_muzammil") {
             dimension = "content"
-            applicationId = "com.ummeshuja.surahmuzammmil.pdf"
+            applicationId = "com.ummeshuja.surahmuzammil.pdf"
             manifestPlaceholders["appLabel"] = "Surah Muzammil"
             manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
                 admobProps.getProperty("surah_muzammil.app.id", "")

@@ -29,7 +29,7 @@ dart run scripts/add_flavor.dart --name surah_mulk --arabic "سورۃ الْمُ
 ### Add Surah Muzammil
 
 ```bash
-dart run scripts/add_flavor.dart --name surah_muzammil --arabic "سورة المزمل" --english "Surah Muzammil" --type surah --app-id com.ummeshuja.surahmuzammmil.pdf --banner-id <admob-banner-unit-id> --admob-app-id <admob-app-id>
+dart run scripts/add_flavor.dart --name surah_muzammil --arabic "سورة المزمل" --english "Surah Muzammil" --type surah --app-id com.ummeshuja.surahmuzammil.pdf --banner-id <admob-banner-unit-id> --admob-app-id <admob-app-id>
 ```
 
 ### Add <name of flavor>
