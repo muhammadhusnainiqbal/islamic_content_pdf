@@ -51,19 +51,19 @@ android {
     flavorDimensions += "content"
 
     productFlavors {
-        create("surah_yaseen") {
-            dimension = "content"
-            applicationId = "com.ummeshuja.surahyaseen.pdf"
-            manifestPlaceholders["appLabel"] = "Surah Yaseen"
-            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
-                admobProps.getProperty("surah_yaseen.app.id", "")
-        }
         create("surah_muzammil") {
             dimension = "content"
             applicationId = "com.ummeshuja.surahmuzammil.pdf"
             manifestPlaceholders["appLabel"] = "Surah Muzammil"
             manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
                 admobProps.getProperty("surah_muzammil.app.id", "")
+        }
+        create("surah_yaseen") {
+            dimension = "content"
+            applicationId = "com.ummeshuja.surahyaseen.pdf"
+            manifestPlaceholders["appLabel"] = "Surah Yaseen"
+            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
+                admobProps.getProperty("surah_yaseen.app.id", "")
         }
     }
 
