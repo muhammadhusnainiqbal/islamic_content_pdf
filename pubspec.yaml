@@ -56,7 +56,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/islamic_content/islamic_content.pdf
+    - assets/islamic_content/
     - assets/icons/app_icon.png
 
 flutter_native_splash:

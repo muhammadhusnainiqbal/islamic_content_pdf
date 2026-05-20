@@ -14,11 +14,11 @@
 //     --admob-app-id ca-app-pub-xxx~zzz   (AdMob app ID, optional)
 //
 // ── What you must do FIRST (Step 1 — script cannot do this for you) ────────
-//   ❌ Place your PDF:  assets/<name>/<name>.pdf
+//   ❌ Place your images:  assets/<name>/<number>.png (e.g., 1.png, 2.png, ...)
 //   ❌ Place your icon: assets/<name>/<name>_icon.png  (1024×1024 PNG)
 //
 // ── What this script does automatically ──────────────────────────────────
-//   ✅ Step 2:  Copies PDF  → assets/islamic_content/islamic_content.pdf
+//   ✅ Step 2:  Copies images folder → assets/islamic_content/
 //   ✅ Step 3:  Copies icon → assets/icons/app_icon.png
 //   ✅ Step 4:  Creates lib/config/<name>_config.dart
 //   ✅ Step 5:  Registers flavor in lib/config/flavor_manager.dart
@@ -71,16 +71,34 @@ void main(List<String> args) {
 
   // ── Step 1: Verify source assets exist BEFORE touching any code ──────────
   _step('1', 'Verifying source assets');
-  final pdfSrc = File('assets/$name/$name.pdf');
+  final imageDir = Directory('assets/$name');
   final iconSrc = File('assets/$name/${name}_icon.png');
   final hasIcon = iconSrc.existsSync();
 
-  if (!pdfSrc.existsSync()) {
-    _err('Missing PDF: ${pdfSrc.path}');
-    _err('Create the file and re-run this script.');
+  if (!imageDir.existsSync()) {
+    _err('Missing image folder: ${imageDir.path}');
+    _err(
+      'Create the folder and add numbered images (1.png, 2.png, ...) and re-run this script.',
+    );
     exit(2);
   }
-  _log('  ✔ PDF found:  ${pdfSrc.path}');
+
+  final images = imageDir
+      .listSync()
+      .where(
+        (e) => e is File && e.path.endsWith('.png') || e.path.endsWith('.jpg'),
+      )
+      .cast<File>()
+      .toList();
+
+  if (images.isEmpty) {
+    _err('No image files found in ${imageDir.path}');
+    _err('Add numbered images (1.png, 2.png, ...) and re-run this script.');
+    exit(2);
+  }
+
+  _log('  ✔ Image folder found: ${imageDir.path}');
+  _log('  ✔ Images found: ${images.length} image(s)');
 
   if (!hasIcon) {
     _warn('Icon not found: ${iconSrc.path}');
@@ -90,13 +108,35 @@ void main(List<String> args) {
     _log('  ✔ Icon found: ${iconSrc.path}');
   }
 
-  // ── Step 2: Copy PDF to shared runtime location ──────────────────────────
-  _step('2', 'Copying PDF → assets/islamic_content/islamic_content.pdf');
-  _copyAsset(
-    src: pdfSrc.path,
-    dstDir: 'assets/islamic_content',
-    dstName: 'islamic_content.pdf',
-  );
+  // ── Step 2: Copy images → assets/islamic_content/<flavor>/ ────────────────
+  _step('2', 'Copying images → assets/islamic_content/');
+
+  final targetDir = Directory('assets/islamic_content/');
+
+  if (!targetDir.existsSync()) {
+    targetDir.createSync(recursive: true);
+    _log('  Created directory: ${targetDir.path}');
+  }
+
+  // Clear old images first
+  for (final entity in targetDir.listSync()) {
+    if (entity is File) {
+      entity.deleteSync();
+    }
+  }
+
+  // Copy images
+  for (final image in images) {
+    final fileName = image.uri.pathSegments.last;
+
+    final destination = File('${targetDir.path}/$fileName');
+
+    image.copySync(destination.path);
+
+    _log('  Copied: ${image.path} → ${destination.path}');
+  }
+
+  _log('  ✔ ${images.length} image(s) copied successfully');
 
   // ── Step 3: Copy icon to shared runtime location ─────────────────────────
   if (hasIcon) {
@@ -321,35 +361,54 @@ void _addGradleFlavor(String name, String english, String appId) {
   final file = File('android/app/build.gradle.kts');
   var content = file.readAsStringSync();
 
-  // If already exists, remove old flavor block to avoid duplicates
-  if (content.contains('"$name"')) {
-    _log('  Gradle flavor "$name" already exists — updating...');
-    // Remove old flavor block - simple approach
-    final pattern = RegExp(
-      r'        create\("' + name + r'"\) \{[^}]*\}\n',
-      dotAll: true,
-    );
-    content = content.replaceAll(pattern, '');
-  }
-
-  // Anchor: find closing `    }` of the productFlavors block
-  // which is immediately followed by two newlines + applicationVariants
-  final newBlock =
-      '        create("$name") {\n'
-      '            dimension = "content"\n'
-      '            applicationId = "$appId"\n'
-      '            manifestPlaceholders["appLabel"] = "$english"\n'
-      '            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =\n'
-      '                admobProps.getProperty("$name.app.id", "")\n'
-      '        }\n'
-      '    }';
-
-  content = content.replaceFirst(
-    RegExp(r'    \}\n\n    applicationVariants'),
-    '$newBlock\n\n    applicationVariants',
+  // Remove existing flavor if already present
+  final existingFlavorPattern = RegExp(
+    r'''
+\s*create\("''' +
+        RegExp.escape(name) +
+        r'''"\)\s*\{
+.*?
+\s*\}
+''',
+    dotAll: true,
+    multiLine: true,
   );
 
+  content = content.replaceAll(existingFlavorPattern, '');
+
+  final newFlavor =
+      '''
+        create("$name") {
+            dimension = "content"
+            applicationId = "$appId"
+
+            manifestPlaceholders["appLabel"] = "$english"
+
+            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
+                admobProps.getProperty("$name.app.id", "")
+        }
+''';
+
+  // Find productFlavors block
+  final productFlavorsPattern = RegExp(r'productFlavors\s*\{');
+
+  final match = productFlavorsPattern.firstMatch(content);
+
+  if (match == null) {
+    _warn('Could not find productFlavors block.');
+    return;
+  }
+
+  // Find insertion point AFTER opening {
+  final insertIndex = match.end;
+
+  content =
+      content.substring(0, insertIndex) +
+      '\n$newFlavor' +
+      content.substring(insertIndex);
+
   file.writeAsStringSync(content);
+
   _log('  Updated: ${file.path}');
 }
 
@@ -442,7 +501,7 @@ Map<String, String>? _parseArgs(List<String> args) {
 
 void _printUsage() {
   print('''
-Islamic PDF App — Flavor Scaffolder
+Islamic Content App — Flavor Scaffolder (Images)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Required:
   --name      surah_mulk                    (snake_case identifier)
@@ -456,8 +515,9 @@ Optional:
   --admob-app-id  ca-app-pub-xxx~zzz       (AdMob app ID        — uses --app-id as placeholder if omitted)
 
 Before running, place source files:
-  assets/surah_mulk/surah_mulk.pdf            ← PDF file
-  assets/surah_mulk/surah_mulk_icon.png       ← 1024×1024 PNG icon
+  assets/surah_mulk/1.png                     ← Image files (1.png, 2.png, 3.png, etc.)
+  assets/surah_mulk/2.png
+  assets/surah_mulk/surah_mulk_icon.png       ← 1024×1024 PNG icon (optional)
 
 Example 1 — placeholder IDs (edit AdMob IDs manually after):
   dart run scripts/add_flavor.dart \\
@@ -474,9 +534,6 @@ Example 2 — real AdMob IDs (fully automated, zero manual edits needed):
     --app-id com.ummeshuja.surah_mulk \\
     --banner-id ca-app-pub-3940256099942544/6300978111 \\
     --admob-app-id ca-app-pub-3940256099942544~3347511713
-
-islamic_content_pdf % dart run scripts/add_flavor.dart --name surah_mulk --arabic  "سورۃ الملک" --english "Surah Mulk" --type surah --app-id com.ummeshuja.surah_mulk --banner-id ca-app-pub-3940256099942544/6300978111 --admob-app-id ca-app-pub-3940256099942544~3347511713
-
 ''');
 }
 
