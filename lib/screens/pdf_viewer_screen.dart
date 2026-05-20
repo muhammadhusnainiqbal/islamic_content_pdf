@@ -87,46 +87,42 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(2),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Material(
-                    elevation: 3,
-                    child: _pdfLoadFailed
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.picture_as_pdf,
-                                  size: 48,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(height: 12),
-                                Text(
-                                  'Could not load content.\nPlease reinstall the app.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          )
-                        : SfPdfViewer.asset(
-                            'assets/islamic_content/islamic_content.pdf',
-                            scrollDirection: PdfScrollDirection.vertical,
-                            pageLayoutMode: PdfPageLayoutMode.continuous,
-                            canShowScrollHead: false,
-                            canShowScrollStatus: false,
-                            onDocumentLoadFailed: (details) {
-                              setState(() {
-                                _pdfLoadFailed = true;
-                              });
-                            },
+              child: _pdfLoadFailed
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.picture_as_pdf,
+                            size: 48,
+                            color: Colors.grey,
                           ),
-                  ),
-                ),
-              ),
+                          SizedBox(height: 12),
+                          Text(
+                            'Could not load content.\nPlease reinstall the app.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    )
+                  : SfPdfViewer.asset(
+                      'assets/islamic_content/islamic_content.pdf',
+                      scrollDirection: PdfScrollDirection.vertical,
+                      pageLayoutMode: PdfPageLayoutMode.continuous,
+                      canShowScrollHead: false,
+                      canShowScrollStatus: false,
+                      // initialZoomLevel: 3.0, not working
+                      enableHyperlinkNavigation: false,
+                      pageSpacing: 0,
+                      canShowPageLoadingIndicator: false,
+                      enableTextSelection: false,
+                      onDocumentLoadFailed: (details) {
+                        setState(() {
+                          _pdfLoadFailed = true;
+                        });
+                      },
+                    ),
             ),
           ],
         ),
