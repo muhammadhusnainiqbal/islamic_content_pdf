@@ -106,22 +106,26 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                         ],
                       ),
                     )
-                  : SfPdfViewer.asset(
-                      'assets/islamic_content/islamic_content.pdf',
-                      scrollDirection: PdfScrollDirection.vertical,
-                      pageLayoutMode: PdfPageLayoutMode.continuous,
-                      canShowScrollHead: false,
-                      canShowScrollStatus: false,
-                      // initialZoomLevel: 3.0, not working
-                      enableHyperlinkNavigation: false,
-                      pageSpacing: 0,
-                      canShowPageLoadingIndicator: false,
-                      enableTextSelection: false,
-                      onDocumentLoadFailed: (details) {
-                        setState(() {
-                          _pdfLoadFailed = true;
-                        });
-                      },
+                  : Transform.scale(
+                      scale: 1.12,
+                      alignment: Alignment.topCenter,
+                      child: SfPdfViewer.asset(
+                        'assets/islamic_content/islamic_content.pdf',
+                        scrollDirection: PdfScrollDirection.vertical,
+                        pageLayoutMode: PdfPageLayoutMode.continuous,
+                        canShowScrollHead: false,
+                        canShowScrollStatus: false,
+                        enableHyperlinkNavigation: false,
+                        pageSpacing: 0,
+                        canShowPageLoadingIndicator: false,
+                        enableTextSelection: false,
+                        enableDocumentLinkAnnotation: false,
+                        onDocumentLoadFailed: (details) {
+                          setState(() {
+                            _pdfLoadFailed = true;
+                          });
+                        },
+                      ),
                     ),
             ),
           ],
