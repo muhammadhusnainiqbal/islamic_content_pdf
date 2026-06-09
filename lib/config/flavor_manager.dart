@@ -7,6 +7,9 @@ import 'package:islamic_content_pdf/config/surah_muzammil_config.dart'
 import 'package:islamic_content_pdf/config/surah_yaseen_config.dart'
     as surah_yaseen;
 
+import 'package:islamic_content_pdf/config/surah_testing_config.dart'
+    as surah_testing;
+
 /// Flavor manager: resolves `AppConfig` by flavor key.
 class FlavorManager {
   static const String defaultFlavor = 'surah_yaseen';
@@ -14,6 +17,7 @@ class FlavorManager {
   static final Map<String, AppConfig> _flavors = {
     'surah_yaseen': surah_yaseen.kAppConfig,
     'surah_muzammil': surah_muzammil.kAppConfig,
+    'surah_testing': surah_testing.kAppConfig,
   };
 
   static String normalize(String flavor) => flavor.trim().toLowerCase();

@@ -7,6 +7,12 @@
 dart run scripts/add_flavor.dart --name <flavor-name> --arabic "<Arabic Name>" --english "<English Name>" --type surah --app-id com.ummeshuja.<flavor-name> --banner-id <admob-banner-unit-id> --admob-app-id <admob-app-id>
 ```
 
+### Add Testing Flavor (Template)
+
+```bash
+dart run scripts/add_flavor.dart --name surah_testing --arabic "سورۃ " --english "Surah Testing" --type surah --app-id com.ummeshuja.surahtesting.pdf --banner-id ca-app-pub-3940256099942544/6300978111 --admob-app-id ca-app-pub-3940256099942544~3347511713 
+```
+
 ### Add Surah Yaseen
 
 ```bash
@@ -43,6 +49,13 @@ dart run scripts/add_flavor.dart --name <flavor-name> --arabic "<Arabic Name>" -
 ---
 
 ## Running the App
+
+
+### Run Surah Testing
+
+```bash
+flutter run --flavor surah_testing --dart-define=FLAVOR=surah_testing
+```
 
 ### Run Surah Yaseen
 
