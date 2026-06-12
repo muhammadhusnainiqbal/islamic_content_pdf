@@ -51,6 +51,41 @@ android {
     flavorDimensions += "content"
 
     productFlavors {
+        create("surah_waqiah") {
+            dimension = "content"
+            applicationId = "com.ummeshuja.surahwaqiah"
+            manifestPlaceholders["appLabel"] = "Surah Waqiah"
+            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
+                admobProps.getProperty("surah_waqiah.app.id", "")
+        }
+        create("surah_kahf") {
+            dimension = "content"
+            applicationId = "com.ummeshuja.surahkahf"
+            manifestPlaceholders["appLabel"] = "Surah Kahf"
+            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
+                admobProps.getProperty("surah_kahf.app.id", "")
+        }
+        create("surah_mulk") {
+            dimension = "content"
+            applicationId = "com.ummeshuja.surahmulk"
+            manifestPlaceholders["appLabel"] = "Surah Mulk"
+            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
+                admobProps.getProperty("surah_mulk.app.id", "")
+        }
+        create("surah_rehman") {
+            dimension = "content"
+            applicationId = "com.ummeshuja.surahrehman"
+            manifestPlaceholders["appLabel"] = "Surah Rehman"
+            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
+                admobProps.getProperty("surah_rehman.app.id", "")
+        }
+        create("surah_testing") {
+            dimension = "content"
+            applicationId = "com.ummeshuja.surahtesting.pdf"
+            manifestPlaceholders["appLabel"] = "Surah Testing"
+            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
+                admobProps.getProperty("surah_testing.app.id", "")
+        }
         create("surah_muzammil") {
             dimension = "content"
             applicationId = "com.ummeshuja.surahmuzammil.pdf"
@@ -64,13 +99,6 @@ android {
             manifestPlaceholders["appLabel"] = "Surah Yaseen"
             manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
                 admobProps.getProperty("surah_yaseen.app.id", "")
-        }
-        create("surah_testing") {
-            dimension = "content"
-            applicationId = "com.ummeshuja.surahtesting.pdf"
-            manifestPlaceholders["appLabel"] = "Surah Testing"
-            manifestPlaceholders["com.google.android.gms.ads.APPLICATION_ID"] =
-                admobProps.getProperty("surah_testing.app.id", "")
         }
     }
 

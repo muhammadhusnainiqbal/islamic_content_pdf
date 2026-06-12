@@ -1,14 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:islamic_content_pdf/config/app_config.dart';
 
+import 'package:islamic_content_pdf/config/surah_testing_config.dart'
+    as surah_testing;
+
+import 'package:islamic_content_pdf/config/surah_waqiah_config.dart'
+    as surah_waqiah;
+
+import 'package:islamic_content_pdf/config/surah_kahf_config.dart'
+    as surah_kahf;
+
+import 'package:islamic_content_pdf/config/surah_mulk_config.dart'
+    as surah_mulk;
+
+import 'package:islamic_content_pdf/config/surah_rehman_config.dart'
+    as surah_rehman;
+
 import 'package:islamic_content_pdf/config/surah_muzammil_config.dart'
     as surah_muzammil;
 
 import 'package:islamic_content_pdf/config/surah_yaseen_config.dart'
     as surah_yaseen;
-
-import 'package:islamic_content_pdf/config/surah_testing_config.dart'
-    as surah_testing;
 
 /// Flavor manager: resolves `AppConfig` by flavor key.
 class FlavorManager {
@@ -18,6 +30,10 @@ class FlavorManager {
     'surah_yaseen': surah_yaseen.kAppConfig,
     'surah_muzammil': surah_muzammil.kAppConfig,
     'surah_testing': surah_testing.kAppConfig,
+    'surah_rehman': surah_rehman.kAppConfig,
+    'surah_waqiah': surah_waqiah.kAppConfig,
+    'surah_kahf': surah_kahf.kAppConfig,
+    'surah_mulk': surah_mulk.kAppConfig,
   };
 
   static String normalize(String flavor) => flavor.trim().toLowerCase();
